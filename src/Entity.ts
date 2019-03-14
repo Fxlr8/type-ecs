@@ -2,9 +2,13 @@ import Component from './Component'
 
 let uid = 0
 
-export default class Entity<ComponentDictType> {
+interface IHash {
+	[indexer: string] : any;
+} 
+
+export default class Entity<ComponentDictType = {}> {
 	public id: number
-	public components: ComponentDictType
+	public components: Partial<ComponentDictType> = {}
 	constructor() {
 		uid += 1
 		this.id = uid
@@ -18,4 +22,10 @@ export default class Entity<ComponentDictType> {
 	public getComponentNames() {
 		return Object.keys(this.components)
 	}
+}
+
+interface IHerpDerp {
+	herp: string
+	derp: number
+	foo: () => {}
 }

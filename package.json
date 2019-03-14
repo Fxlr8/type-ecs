@@ -1,6 +1,6 @@
 {
   "name": "type-ecs",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Typescript implementation of Entity Component System",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
