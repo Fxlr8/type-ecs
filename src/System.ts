@@ -3,7 +3,9 @@ import ECS from './ECS'
 import Entity from './Entity'
 import IEvent from './Event'
 
-interface ISystem<ComponentDictType, ContextType, KeyType = number> {
+type KeyType = number | string
+
+interface ISystem<ComponentDictType, ContextType> {
 	entities: Map<KeyType, Entity<ComponentDictType>>
 	events: Array<IEvent>
 	componentFilter: string[]
@@ -39,7 +41,7 @@ interface ISystem<ComponentDictType, ContextType, KeyType = number> {
 /**
  * Class representing an ECS system
  */
-export default class System<ComponentDictType = {}, ContextType = {}, KeyType = number> implements ISystem<ComponentDictType, ContextType, KeyType> {
+export default class System<ComponentDictType = {}, ContextType = {}> implements ISystem<ComponentDictType, ContextType> {
 	public entities: Map<KeyType, Entity<ComponentDictType>> = new Map()
 	public componentFilter: string[] = []
 	public events: Array<IEvent>
@@ -73,7 +75,7 @@ export default class System<ComponentDictType = {}, ContextType = {}, KeyType = 
 	}
 
 	public getEntityKey(entity: Entity<ComponentDictType>): KeyType {
-		return entity.id
+		return entity.id as KeyType
 	}
 
 	public entityExsists(key: KeyType) {
