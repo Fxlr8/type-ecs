@@ -2,30 +2,35 @@ import Component from './Component'
 
 let uid = 0
 
-interface IHash {
-	[indexer: string] : any;
-} 
-
+/**
+ * Class representing an ECS entity
+ */
 export default class Entity<ComponentDictType = {}> {
 	public id: number
+	/**
+	 * A dict of all components of an Entity
+	 */
 	public components: Partial<ComponentDictType> = {}
 	constructor() {
 		uid += 1
 		this.id = uid
 	}
+	/**
+	 * Adds the component to the entity by name
+	 */
 	public addComponent(component: Component) {
 		this.components[component.name] = component
 	}
-	public removeComponent(component: Component) {
-		this.components[component.name] = undefined
+	/**
+	 * Removes the component from the entity
+	 */
+	public removeComponent(component: Component): boolean {
+		return delete this.components[component.name]
 	}
+	/**
+	 * Returns an array of component names of the entity
+	 */
 	public getComponentNames() {
 		return Object.keys(this.components)
 	}
-}
-
-interface IHerpDerp {
-	herp: string
-	derp: number
-	foo: () => {}
 }

@@ -1,48 +1,90 @@
 import Component from './Component'
 import ECS from './ECS'
 import Entity from './Entity'
+import IEvent from './Event'
 
-export default class System<ComponentDictType, ContextType> {
-  public entities: Map<number, Entity<ComponentDictType>> = new Map()
-  public componentFilter: string[] = []
-  public world: ECS<ComponentDictType, ContextType>
+interface ISystem<ComponentDictType, ContextType, KeyType = number> {
+	entities: Map<KeyType, Entity<ComponentDictType>>
+	events: Array<IEvent>
+	componentFilter: string[]
+	world: ECS<ComponentDictType, ContextType>
 
-  public onEntityAdd(entity: Entity<ComponentDictType>): boolean {
-    const key = this.getEntityKey(entity)
-    if (!this.entityExsists(key) && this.entityFits(entity)) {
-      this.entities.set(this.getEntityKey(entity), entity)
-      return true
-    }
-    return false
-  }
+	onEntityAdd(entity: Entity<ComponentDictType>): boolean
+	onEntityDelete(entity: Entity<ComponentDictType>): boolean
+	update(dt: number, context: ContextType): void
+	/**
+	 * Triggered when the system is added to world
+	 */
+	addedToWorld(world: ECS<ComponentDictType, ContextType>):void
+	removedFromWorld(): void
+	/**
+	 * Get a key by which an entity will be stored in the system
+	 */
+	getEntityKey(entity: Entity<ComponentDictType>): KeyType
+	/**
+	 * Check if the entity in this system's storage
+	 */
+	entityExsists(key: KeyType): boolean
+	/**
+	 * Check if the entity can be added to this system.
+	 * By default checks if the entity has all the components listed in the componentFilter array
+	 */
+	entityFits(entity: Entity<ComponentDictType>): boolean
+	/**
+	 * Called on new event from ECS
+	 */
+	onEvent(e: IEvent): void
+}
 
-  public update(dt: number, context: ContextType) {
-    return
-  }
+/**
+ * Class representing an ECS system
+ */
+export default class System<ComponentDictType = {}, ContextType = {}, KeyType = number> implements ISystem<ComponentDictType, ContextType, KeyType> {
+	public entities: Map<KeyType, Entity<ComponentDictType>> = new Map()
+	public componentFilter: string[] = []
+	public events: Array<IEvent>
+	public world: ECS<ComponentDictType, ContextType>
 
-  public onEntityDelete(entity: Entity<ComponentDictType>): boolean {
-    return this.entities.delete(this.getEntityKey(entity))
-  }
+	public onEntityAdd(entity: Entity<ComponentDictType>): boolean {
+		const key = this.getEntityKey(entity)
+		if (!this.entityExsists(key) && this.entityFits(entity)) {
+			this.entities.set(this.getEntityKey(entity), entity)
+			return true
+		}
+		return false
+	}
 
-  public addedToWorld(world: ECS<ComponentDictType, ContextType>) {
-    this.world = world
-    return
-  }
+	public update(dt: number, context: ContextType) {
+		return
+	}
 
-  public removedFromWorld() {
-    this.world = undefined
-    return
-  }
+	public onEntityDelete(entity: Entity<ComponentDictType>): boolean {
+		return this.entities.delete(this.getEntityKey(entity))
+	}
 
-  public getEntityKey(entity: Entity<ComponentDictType>) {
-    return entity.id
-  }
+	public addedToWorld(world: ECS<ComponentDictType, ContextType>) {
+		this.world = world
+		return
+	}
 
-  public entityExsists(key: number) {
-    return this.entities.has(key)
-  }
+	public removedFromWorld() {
+		this.world = undefined
+		return
+	}
 
-  public entityFits(entity: Entity<ComponentDictType>) {
-    return this.componentFilter.every(componentName => entity.getComponentNames().includes(componentName))
-  }
+	public getEntityKey(entity: Entity<ComponentDictType>): KeyType {
+		return entity.id
+	}
+
+	public entityExsists(key: KeyType) {
+		return this.entities.has(key)
+	}
+
+	public entityFits(entity: Entity<ComponentDictType>) {
+		return this.componentFilter.every(componentName => entity.getComponentNames().includes(componentName))
+	}
+
+	public onEvent(e: IEvent) {
+		return
+	}
 }
