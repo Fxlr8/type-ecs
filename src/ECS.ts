@@ -8,6 +8,7 @@ import IEvent from './Event'
 export default class ECS<ComponentDictType, ContextType> {
 	public entities: Map<number, Entity<ComponentDictType>> = new Map()
 	public systems: Array<System<ComponentDictType, ContextType>> = []
+	public subscriptions: Map<number, Set<(e: IEvent) => void>> = new Map()
 
 	/**
 	 * Adds entity to world and all systems that it fits
@@ -37,7 +38,6 @@ export default class ECS<ComponentDictType, ContextType> {
 		const entities = this.entities.forEach(e => {
 			system.onEntityAdd(e)
 		})
-		this.systems.push(system)
 	}
 
 	/**
@@ -52,7 +52,20 @@ export default class ECS<ComponentDictType, ContextType> {
 	}
 
 	public createEvent(e: IEvent) {
-		this.systems.forEach(system => system.onEvent(e))
+		const callbacks = this.subscriptions.get(e.type)
+		if(callbacks && callbacks.size) {
+			for (const cb of callbacks) {
+				cb(e)
+			}
+		}
 	}
 
+	public on(eventType: number, cb: (IEvent) => void) {
+		let callbacks = this.subscriptions.get(eventType)
+		if(!this.subscriptions.has(eventType)) {
+			callbacks = new Set()
+			this.subscriptions.set(eventType, callbacks)
+		}
+		callbacks.add(cb)
+	}
 }
