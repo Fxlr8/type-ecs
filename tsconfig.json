@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "module": "esNext",
+    "module": "system",
     "declaration": true,
+    "noUnusedLocals": true,
     "lib": [
       "esnext",
       "dom",

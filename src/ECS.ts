@@ -35,7 +35,7 @@ export default class ECS<ComponentDictType, ContextType> {
 	 */
 	public addSystem(system: System<ComponentDictType, ContextType>) {
 		system.addedToWorld(this)
-		const entities = this.entities.forEach(e => {
+		this.entities.forEach(e => {
 			system.onEntityAdd(e)
 		})
 	}
@@ -60,9 +60,9 @@ export default class ECS<ComponentDictType, ContextType> {
 		}
 	}
 
-	public on(eventType: number, cb: (IEvent) => void) {
+	public on(eventType: number, cb: (e:IEvent) => void) {
 		let callbacks = this.subscriptions.get(eventType)
-		if(!this.subscriptions.has(eventType)) {
+		if(!callbacks) {
 			callbacks = new Set()
 			this.subscriptions.set(eventType, callbacks)
 		}

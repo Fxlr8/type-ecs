@@ -1,4 +1,3 @@
-import Component from './Component'
 import ECS from './ECS'
 import Entity from './Entity'
 import IEvent from './Event'
@@ -44,8 +43,12 @@ interface ISystem<ComponentDictType, ContextType> {
 export default class System<ComponentDictType = {}, ContextType = {}> implements ISystem<ComponentDictType, ContextType> {
 	public entities: Map<KeyType, Entity<ComponentDictType>> = new Map()
 	public componentFilter: string[] = []
-	public events: Array<IEvent>
+	public events: Array<IEvent> = []
 	public world: ECS<ComponentDictType, ContextType>
+
+	constructor(world: ECS<ComponentDictType, ContextType>) {
+		this.world = world
+	}
 
 	public onEntityAdd(entity: Entity<ComponentDictType>): boolean {
 		const key = this.getEntityKey(entity)
@@ -65,12 +68,10 @@ export default class System<ComponentDictType = {}, ContextType = {}> implements
 	}
 
 	public addedToWorld(world: ECS<ComponentDictType, ContextType>) {
-		this.world = world
 		return
 	}
 
 	public removedFromWorld() {
-		this.world = undefined
 		return
 	}
 
