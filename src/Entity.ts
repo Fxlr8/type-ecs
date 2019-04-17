@@ -19,6 +19,9 @@ export default class Entity<ComponentDictType = {}> {
 	 * Adds the component to the entity by name
 	 */
 	public addComponent(component: Component) {
+		if(!component.name) {
+			throw 'Component must have a name'
+		}
 		this.components[component.name] = component
 	}
 	/**

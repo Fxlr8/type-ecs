@@ -52,7 +52,7 @@ export default class System<ComponentDictType = {}, ContextType = {}> implements
 
 	public onEntityAdd(entity: Entity<ComponentDictType>): boolean {
 		const key = this.getEntityKey(entity)
-		if (!this.entityExsists(key) && this.entityFits(entity)) {
+		if (this.entityFits(entity) && !this.entityExsists(key)) {
 			this.entities.set(this.getEntityKey(entity), entity)
 			return true
 		}
