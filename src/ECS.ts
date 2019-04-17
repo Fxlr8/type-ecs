@@ -38,6 +38,7 @@ export default class ECS<ComponentDictType, ContextType> {
 		this.entities.forEach(e => {
 			system.onEntityAdd(e)
 		})
+		this.systems.push(system)
 	}
 
 	/**
