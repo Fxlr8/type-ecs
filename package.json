@@ -1,11 +1,12 @@
 {
   "name": "type-ecs",
-  "version": "1.1.8",
+  "version": "1.2.1",
   "description": "Typescript implementation of Entity Component System",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

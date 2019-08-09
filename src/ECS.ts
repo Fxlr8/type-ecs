@@ -8,7 +8,7 @@ import IEvent from './Event'
 export default class ECS<ComponentDictType, ContextType> {
 	public entities: Map<number, Entity<ComponentDictType>> = new Map()
 	public systems: Array<System<ComponentDictType, ContextType>> = []
-	public subscriptions: Map<number, Set<(e: IEvent) => void>> = new Map()
+	public subscriptions: Map<string, Set<(e: IEvent) => void>> = new Map()
 
 	/**
 	 * Adds entity to world and all systems that it fits
@@ -61,7 +61,7 @@ export default class ECS<ComponentDictType, ContextType> {
 		}
 	}
 
-	public on(eventType: number, cb: (e:IEvent) => void) {
+	public on(eventType: string, cb: (e:IEvent) => void) {
 		let callbacks = this.subscriptions.get(eventType)
 		if(!callbacks) {
 			callbacks = new Set()

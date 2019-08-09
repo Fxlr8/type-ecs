@@ -1,3 +1,3 @@
 export default interface IEvent {
-	type: number
+	type: string
 }
