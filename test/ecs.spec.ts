@@ -1,22 +1,57 @@
 import { expect } from 'chai';
-import ECS, { ECSEvent } from '../src/index'
-import 'mocha';
+import ECS, { Entity, Component, System } from '../src/index'
 
-class TestEvent implements ECSEvent {
-	type = 1
-	data = 'derp'
+interface TestComponents {
+	n: number,
+	s: string
 }
 
-describe('ECS', () => {
-	describe('events', () => {
-		it('should add a callback and call it on event', (done) => {
-			const ecs = new ECS()
-			ecs.on(1, (e: TestEvent) => {
-				expect(e.data).eq('derp')
-				done()
-			})
-			const e = new TestEvent()
-			ecs.createEvent(e)
-		})
-	})
-})
+interface TestContext {
+	foo: number[]
+}
+
+class TestEntity extends Entity<TestComponents> {
+
+}
+
+class TestSystem<Tcontext extends TestContext = TestContext> extends System<TestEntity, TestContext, TestGame<Tcontext>> {
+	constructor(world: TestGame<Tcontext>) {
+		super(world)
+
+	}
+
+	update() {
+		this.world
+	}
+}
+
+class TestGame<TContext extends TestContext> extends ECS<TestEntity, TContext> {
+	public derp = 'herp'
+	constructor() {
+		super()
+
+		this.addSystem(new TestSystem(this))
+	}
+}
+
+interface TestModeContext extends TestContext {
+	baz: string
+}
+
+class TestModeSystem extends System<TestEntity, TestModeContext, TestGameMode> {
+	constructor(world: TestGameMode) {
+		super(world)
+
+		this.world.derp
+		this.world.herp
+	}
+}
+
+class TestGameMode extends TestGame<TestModeContext> {
+	public herp = 'derp'
+	constructor() {
+		super()
+
+		this.addSystem(new )
+	}
+}
